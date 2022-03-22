@@ -7,10 +7,12 @@ namespace BankAPI.Services.Impl
     public class ClienteService : IClienteService
     {
         private readonly IClienteRepository _ClienteRepository;
+        private readonly IContaService _ContaSevice;
 
-        public ClienteService(IClienteRepository ClienteRepository)
+        public ClienteService(IClienteRepository ClienteRepository, IContaService contaService)
         {
             _ClienteRepository = ClienteRepository;
+            _ContaSevice = contaService;
         }
 
         public Cliente addCliente(Cliente cliente)
@@ -31,7 +33,13 @@ namespace BankAPI.Services.Impl
 
         public List<Cliente> GetAllCliente()
         {
-            return _ClienteRepository.GetAllCliente();
+            List<Cliente>retClientes = _ClienteRepository.GetAllCliente();
+            foreach (Cliente cliente in retClientes)
+            {
+                cliente.Contas = new List<Conta>();
+                cliente.Contas.AddRange(_ContaSevice.GetContas(cliente.nrCliente));
+            }
+            return retClientes;
         }
 
         public Cliente? GetCliente(int nrCliente)

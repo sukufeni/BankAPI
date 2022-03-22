@@ -4,6 +4,7 @@ using BankDomain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankDAO.Migrations
 {
     [DbContext(typeof(ContextPrincipal))]
-    partial class ContextPrincipalModelSnapshot : ModelSnapshot
+    [Migration("20220319003618_Conta creation")]
+    partial class Contacreation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,18 +61,15 @@ namespace BankDAO.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("nrConta"), 1L, 1);
 
-                    b.Property<Guid?>("ClienteidPessoa")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<decimal>("saldoConta")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("titular")
-                        .HasColumnType("int");
+                    b.Property<Guid>("titularidPessoa")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("nrConta");
 
-                    b.HasIndex("ClienteidPessoa");
+                    b.HasIndex("titularidPessoa");
 
                     b.ToTable("Contas");
                 });
@@ -310,9 +309,13 @@ namespace BankDAO.Migrations
 
             modelBuilder.Entity("BankDomain.Model.Conta", b =>
                 {
-                    b.HasOne("BankDomain.Model.Cliente", null)
-                        .WithMany("Contas")
-                        .HasForeignKey("ClienteidPessoa");
+                    b.HasOne("BankDomain.Model.Cliente", "titular")
+                        .WithMany()
+                        .HasForeignKey("titularidPessoa")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("titular");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -364,11 +367,6 @@ namespace BankDAO.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("BankDomain.Model.Cliente", b =>
-                {
-                    b.Navigation("Contas");
                 });
 #pragma warning restore 612, 618
         }

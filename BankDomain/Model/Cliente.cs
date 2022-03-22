@@ -5,11 +5,11 @@ namespace BankDomain.Model
     public class Cliente : Pessoa
     {
 
-
         [Required]
         public int nrCliente { get; set; }
 
-        private List<Conta> contas;
+        [Required]
+        public List<Conta> Contas { get; set; }
         public Gerente gerenteCliente { get; set; }
 
     }

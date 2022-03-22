@@ -13,7 +13,7 @@ namespace BankDomain
         }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Gerente> Gerentes { get; set; }
-
+        public DbSet<Conta> Contas { get; set; }
 
     }
 }

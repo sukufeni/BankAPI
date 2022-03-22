@@ -6,25 +6,26 @@ namespace BankAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GerenteController : ControllerBase
+    public class ClientController : ControllerBase
     {
-        private readonly IGerenteService GerenteService;
+        private readonly IClienteService ClienteService;
 
-        public GerenteController(IGerenteService GerenteService)
+        public ClientController(IClienteService ClienteService)
         {
-            this.GerenteService = GerenteService;
+            this.ClienteService = ClienteService;
         }
-
-        [HttpGet(Name = "/GetGerentes")]
+        [HttpGet]
+        [Route("/GetClientes")]
         public IActionResult getClient()
         {
-            return Ok(this.GerenteService.GetAllGerente());
+            return Ok(this.ClienteService.GetAllCliente());
         }
 
-        [HttpPost(Name = "/addGerente")]
-        public IActionResult addGerente(Gerente Gerente)
+        [HttpPost]
+        [Route("/addCliente")]
+        public IActionResult addCliente(Cliente Cliente)
         {
-            Gerente added = this.GerenteService.addGerente(Gerente);
+            Cliente added = this.ClienteService.addCliente(Cliente);
             return Created("Success", added);
         }
     }
